@@ -45,33 +45,44 @@ class LapanganController extends Controller
     {
         $request->validate([
             'field_id' => 'required|exists:fields,id',
-            'day_of_week' => 'required|integer|min:0|max:6',
+            'start_date' => 'required|date',
+            'end_date' => 'required|date|after_or_equal:start_date',
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'price' => 'required|integer|min:0',
         ]);
     
-        $start = \Carbon\Carbon::createFromFormat('H:i', $request->start_time);
-        $end = \Carbon\Carbon::createFromFormat('H:i', $request->end_time);
+        $startDate = \Carbon\Carbon::parse($request->start_date);
+        $endDate = \Carbon\Carbon::parse($request->end_date);
     
-        while ($start < $end) {
-            $nextHour = (clone $start)->addHour();
+        $startTime = \Carbon\Carbon::createFromFormat('H:i', $request->start_time);
+        $endTime = \Carbon\Carbon::createFromFormat('H:i', $request->end_time);
     
-            DB::table('schedules')->insert([
-                'field_id' => $request->field_id,
-                'day_of_week' => $request->day_of_week,
-                'start_time' => $start->format('H:i:s'),
-                'end_time' => $nextHour->format('H:i:s'),
-                'price' => $request->price,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
+        $dates = \Carbon\CarbonPeriod::create($startDate, $endDate);
     
-            $start = $nextHour;
+        foreach ($dates as $date) {
+            $start = $startTime->copy();
+        
+            while ($start < $endTime) {
+                $nextHour = $start->copy()->addHour();
+            
+                DB::table('schedules')->insert([
+                    'field_id' => $request->field_id,
+                    'date' => $date->format('Y-m-d'),
+                    'start_time' => $start->format('H:i:s'),
+                    'end_time' => $nextHour->format('H:i:s'),
+                    'price' => $request->price,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            
+                $start = $nextHour;
+            }
         }
     
-        return redirect()->route('lapangan.schedule')->with('success', 'Jadwal berhasil ditambahkan!');
+        return redirect()->route('lapangan.schedule')->with('success', 'Jadwal berhasil ditambahkan untuk rentang tanggal tersebut!');
     }
+
     
 
     public function jadwal()

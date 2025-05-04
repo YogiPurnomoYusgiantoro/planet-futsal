@@ -17,36 +17,33 @@
                         <h5 class="card-title">{{ $field->name }}</h5>
                         <div class="mt-3">
                             @php
-                                $days = [
-                                    0 => 'Minggu', 1 => 'Senin', 2 => 'Selasa', 3 => 'Rabu',
-                                    4 => 'Kamis', 5 => 'Jumat', 6 => 'Sabtu'
-                                ];
-                                $grouped = $field->schedules->groupBy('day_of_week');
+                                $grouped = $field->schedules->groupBy('date');
                             @endphp
 
-                            @foreach($days as $dayNum => $dayName)
-                                @if(isset($grouped[$dayNum]))
-                                    <div class="mb-3">
-                                        <div class="fw-bold mb-2">{{ $dayName }}</div>
-                                        <div class="row row-cols-1 row-cols-md-2 g-2">
-                                            @foreach($grouped[$dayNum]->chunk(ceil($grouped[$dayNum]->count() / 2)) as $chunk)
-                                                <div class="col">
-                                                    @foreach($chunk as $schedule)
-                                                        <div class="d-flex justify-content-start align-items-center gap-2 mb-2">
-                                                            <div class="badge bg-success">
-                                                                {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
-                                                                {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
-                                                            </div>
-                                                            <div class="badge bg-dark">
-                                                                Rp {{ number_format($schedule->price) }}
-                                                            </div>
-                                                        </div>
-                                                    @endforeach
-                                                </div>
-                                            @endforeach
-                                        </div>
+                            @foreach($grouped as $date => $schedules)
+                                <div class="mb-3">
+                                    <div class="fw-bold mb-2">
+                                        {{ \Carbon\Carbon::parse($date)->translatedFormat('l, d M Y') }}
                                     </div>
-                                @endif
+
+                                    <div class="row row-cols-1 row-cols-md-2 g-2">
+                                        @foreach($schedules->chunk(ceil($schedules->count() / 2)) as $chunk)
+                                            <div class="col">
+                                                @foreach($chunk as $schedule)
+                                                    <div class="d-flex justify-content-start align-items-center gap-2 mb-2">
+                                                        <div class="badge bg-success">
+                                                            {{ \Carbon\Carbon::parse($schedule->start_time)->format('H:i') }} -
+                                                            {{ \Carbon\Carbon::parse($schedule->end_time)->format('H:i') }}
+                                                        </div>
+                                                        <div class="badge bg-dark">
+                                                            Rp {{ number_format($schedule->price, 0, ',', '.') }}
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             @endforeach
                         </div>
                     </div>

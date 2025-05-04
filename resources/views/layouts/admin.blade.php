@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Planet Futsal')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <style>
         html, body {
             height: 100%;
@@ -107,6 +108,15 @@
                     </li>
                     <li class="nav-item mt-3">
                         <a href="{{ route('laporan.keuangan') }}" class="nav-link {{ request()->is('admin/laporan-keuangan') ? 'active' : '' }} disabled">Laporan Keuangan</a>
+                    </li>
+                    <li class="nav-item mt-3">
+                        <form action="{{ route('admin.logout') }}" method="POST">
+                            @csrf
+                            <button type="submit" class="nav-link btn btn-link d-flex align-items-center gap-2 p-0" style="color: #dc3545;">
+                                <i class="fas fa-sign-out-alt"></i> Keluar
+                            </button>
+
+                        </form>
                     </li>
                 </ul>
             </div>

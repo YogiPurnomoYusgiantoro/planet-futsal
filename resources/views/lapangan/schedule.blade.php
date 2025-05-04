@@ -18,27 +18,24 @@
             </select>
         </div>
 
-        <div class="mb-3">
-            <label for="day_of_week" class="form-label">Hari</label>
-            <select name="day_of_week" id="day_of_week" class="form-select" required>
-                <option value="">-- Pilih Hari --</option>
-                <option value="1">Senin</option>
-                <option value="2">Selasa</option>
-                <option value="3">Rabu</option>
-                <option value="4">Kamis</option>
-                <option value="5">Jumat</option>
-                <option value="6">Sabtu</option>
-                <option value="0">Minggu</option>
-            </select>
+        <div class="mb-3 row">
+            <div class="col">
+                <label for="start_date" class="form-label">Tanggal Mulai</label>
+                <input type="date" name="start_date" id="start_date" class="form-control" required>
+            </div>
+            <div class="col">
+                <label for="end_date" class="form-label">Tanggal Selesai</label>
+                <input type="date" name="end_date" id="end_date" class="form-control" required>
+            </div>
         </div>
 
         <div class="mb-3 row">
             <div class="col">
-            <label for="start_time" class="form-label">Jam Awal Operasional</label>               
+                <label for="start_time" class="form-label">Jam Awal Operasional</label>               
                 <input type="time" name="start_time" id="start_time" step="3600" class="form-control" required>
             </div>
             <div class="col">
-            <label for="end_time" class="form-label">Jam Akhir Operasional</label>
+                <label for="end_time" class="form-label">Jam Akhir Operasional</label>
                 <input type="time" name="end_time" id="end_time" step="3600" class="form-control" required>
             </div>
         </div>
