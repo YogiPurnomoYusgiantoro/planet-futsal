@@ -3,16 +3,12 @@
 @section('title', $field->name)
 
 @section('content')
-    {{-- 1. Foto Lapangan --}}
     <img src="{{ asset('storage/' . $field->image) }}" class="img-fluid rounded mb-3" alt="{{ $field->name }}">
 
-    {{-- 2. Nama Lapangan --}}
     <h4 class="fw-bold">{{ $field->name }}</h4>
 
-    {{-- 3. Deskripsi --}}
     <p class="text-muted">{{ $field->description }}</p>
 
-    {{-- 4. Fasilitas --}}
     <h6 class="fw-semibold mt-4">Fasilitas</h6>
     <div class="text-secondary small">
         <div class="d-flex align-items-center mb-2">
@@ -35,46 +31,22 @@
         </div>
     </div>
 
-    {{-- 5. Pilih Tanggal --}}
     <h6 class="fw-semibold mt-4 mb-2">Sesi Lapangan</h6>
     <input type="date" id="dateSelect" class="form-control mb-3" onchange="renderSessions()">
 
-    {{-- 6. Pilih Sesi --}}
     <div id="sessionContainer" class="row g-2"></div>
     <div id="sessionEmpty" class="text-muted small text-center mt-3 d-none">
         Sesi tidak tersedia pada tanggal tersebut.
     </div>
 
-    {{-- 7. Tombol Checkout --}}
     <div class="d-grid mt-4">
         <button class="btn btn-success" onclick="goToCheckout()">Lanjut ke Checkout</button>
     </div>
 
-    {{-- Jadwal sebagai JSON --}}
     <script>
         const schedules = @json($schedules);
-    </script>
+        const bookedSessions = @json($bookedSessions);
 
-    {{-- CSS Interaktif --}}
-    <style>
-        .selectable-session {
-            transition: 0.2s;
-            border: 2px solid #dee2e6;
-        }
-
-        .selectable-session:hover {
-            border-color: #28a745;
-            background-color: #e9fbe9;
-        }
-
-        .selected-session {
-            border-color: #198754 !important;
-            background-color: #d1f7d1 !important;
-        }
-    </style>
-
-    {{-- JavaScript --}}
-    <script>
         function selectSession(el) {
             el.classList.toggle('selected-session');
         }
@@ -95,15 +67,18 @@
             emptyNotice.classList.add('d-none');
 
             sessions.forEach(session => {
+                // Check if the session is already booked
+                const isBooked = bookedSessions.some(booked => booked.schedule_id === session.id);
+                
                 const col = document.createElement('div');
                 col.className = 'col-6';
                 col.innerHTML = `
-                    <div class="border rounded p-2 text-center selectable-session"
+                    <div class="border rounded p-2 text-center selectable-session ${isBooked ? 'disabled-session' : ''}"
                          data-id="${session.id}"
                          data-start="${session.start_time.slice(0,5)}"
                          data-end="${session.end_time.slice(0,5)}"
                          data-price="${session.price}"
-                         style="cursor: pointer;"
+                         style="cursor: ${isBooked ? 'not-allowed' : 'pointer'};"
                          onclick="selectSession(this)">
                         <div class="fw-bold">${session.start_time.slice(0,5)} - ${session.end_time.slice(0,5)}</div>
                         <div class="small text-success">Rp${Number(session.price).toLocaleString('id-ID')}</div>
@@ -148,4 +123,27 @@
             }
         });
     </script>
+
+    <style>
+        .selectable-session {
+            transition: 0.2s;
+            border: 2px solid #dee2e6;
+        }
+
+        .selectable-session:hover {
+            border-color: #28a745;
+            background-color: #e9fbe9;
+        }
+
+        .selected-session {
+            border-color: #198754 !important;
+            background-color: #d1f7d1 !important;
+        }
+
+        .disabled-session {
+            background-color: #f8d7da !important;
+            color: #6c757d;
+            cursor: not-allowed;
+        }
+    </style>
 @endsection

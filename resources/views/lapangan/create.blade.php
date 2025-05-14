@@ -19,11 +19,11 @@
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Deskripsi</label>
-            <textarea name="description" id="description" class="form-control"></textarea>
+            <textarea name="description" id="description" required class="form-control"></textarea>
         </div>
         <div class="mb-3">
             <label for="image" class="form-label">Gambar</label>
-            <input type="file" name="image" id="image" class="form-control">
+            <input type="file" name="image" id="image" required class="form-control">
         </div>
         <button type="submit" class="btn btn-success">Simpan</button>
     </form>

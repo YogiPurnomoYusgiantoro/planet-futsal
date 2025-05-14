@@ -51,7 +51,7 @@ class AdminAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $request->session()->put('admin_login', true);
-            return redirect()->intended('/admin/lapangan/schedule/available');
+            return redirect()->intended('/admin/lapangan/booked');
         }
 
         return back()->with('error', 'Email atau kata sandi salah.');
@@ -65,6 +65,8 @@ class AdminAuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
     
-        return redirect('/admin')->with('status', 'Anda berhasil logout.');
+        return redirect('/login')->with('status', 'Anda berhasil logout.');
     }
+
+    
 }

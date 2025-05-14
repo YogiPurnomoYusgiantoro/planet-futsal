@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Field;
 use App\Models\Schedule;
+use Illuminate\Support\Facades\DB;
+
 
 
 class MainController extends Controller
@@ -17,9 +19,16 @@ class MainController extends Controller
     public function show($id)
     {
         $field = Field::with('schedules')->findOrFail($id);
-        $schedules = $field->schedules->groupBy('date');
+        
+        $bookedSessions = DB::table('booking_sessions')
+            ->join('schedules', 'booking_sessions.schedule_id', '=', 'schedules.id')
+            ->where('schedules.field_id', $id)
+            ->get();
     
-        return view('customer.detail-field', compact('field', 'schedules'));
+        $schedules = $field->schedules->groupBy('date');
+        
+        return view('customer.detail-field', compact('field', 'schedules', 'bookedSessions'));
     }
+    
 
 }

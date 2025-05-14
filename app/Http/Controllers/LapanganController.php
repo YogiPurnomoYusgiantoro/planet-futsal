@@ -7,17 +7,30 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Field;
 use App\Models\Schedule;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 
 class LapanganController extends Controller
 {
     public function create()
     {
+        $admin = session('admin_login');
+        
+        if (!$admin) {
+            return redirect('/login');
+        }
+
         return view('lapangan.create');
     }
 
     public function store(Request $request)
     {
+        $admin = session('admin_login');
+        
+        if (!$admin) {
+            return redirect('/login');
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -37,12 +50,23 @@ class LapanganController extends Controller
 
     public function schedule()
     {
+        $admin = session('admin_login');
+        
+        if (!$admin) {
+            return redirect('/login');
+        }
+
         $fields = Field::all();
         return view('lapangan.schedule', compact('fields'));
     }
 
     public function scheduleStore(Request $request)
     {
+        $admin = session('admin_login');
+        
+        if (!$admin) {
+            return redirect('/login');
+        }
         $request->validate([
             'field_id' => 'required|exists:fields,id',
             'start_date' => 'required|date',
@@ -87,7 +111,85 @@ class LapanganController extends Controller
 
     public function jadwal()
     {
-       $fields = Field::with('schedules')->get();
-       return view('lapangan.jadwal', compact('fields'));
+        $admin = session('admin_login');
+        
+        if (!$admin) {
+            return redirect('/login');
+        }
+        $fields = Field::with('schedules')->get();
+        return view('lapangan.jadwal', compact('fields'));
     }
+
+    
+    public function booked(Request $request)
+    {
+        $admin = session('admin_login');
+        
+        if (!$admin) {
+            return redirect('/login');
+        }
+
+        $date = $request->query('date', now()->toDateString());
+
+        $schedules = DB::table('schedules')
+            ->join('fields', 'schedules.field_id', '=', 'fields.id')
+            ->join('booking_sessions', 'schedules.id', '=', 'booking_sessions.schedule_id')
+            ->join('bookings', 'booking_sessions.booking_id', '=', 'bookings.id')
+            ->join('orders', 'bookings.order_id', '=', 'orders.id')
+            ->whereDate('schedules.date', $date)
+            ->select(
+                'schedules.*',
+                'fields.name as field_name',
+                'orders.booking_status'
+            )
+            ->get();
+    
+        return view('booking.booked', compact('schedules'));
+    }
+
+
+    public function showSchedule($id)
+    {
+        $admin = session('admin_login');
+        if (!$admin) return redirect('/login'); 
+
+        $field = Field::with('schedules')->findOrFail($id);
+        return view('lapangan.detail', compact('field'));
+    }
+
+    public function updateField(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $field = Field::findOrFail($id);
+        $field->name = $request->name;
+        $field->save();
+
+        return redirect()->back()->with('success', 'Nama lapangan berhasil diperbarui.');
+    }
+
+    public function updateSchedulePrice(Request $request, $id)
+    {
+        $request->validate([
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        DB::table('schedules')
+            ->where('id', $id)
+            ->update(['price' => $request->price]);
+
+        return redirect()->back()->with('success', 'Harga berhasil diperbarui.');
+    }
+
+    public function destroy($id)
+    {
+        $field = Field::findOrFail($id);
+        $field->delete();
+
+        return redirect()->route('lapangan.jadwal')->with('success', 'Lapangan berhasil dihapus.');
+    }
+
+
 }

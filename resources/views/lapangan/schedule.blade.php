@@ -3,6 +3,13 @@
 @section('title', 'Atur Jadwal Lapangan')
 
 @section('content')
+
+@if(session('success'))
+    <div id="snackbar" class="snackbar show">
+        {{ session('success') }}
+    </div>
+@endif
+
     <h2>Atur Jadwal Lapangan</h2>
 
     <form action="{{ route('lapangan.schedule.store') }}" method="POST">
