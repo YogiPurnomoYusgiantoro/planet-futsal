@@ -57,7 +57,7 @@
         }
 
         .navbar-custom .nav-link:hover {
-            color: #096B68;
+            color:rgb(84, 99, 99);
         }
 
         .navbar-custom .navbar-toggler-icon {
@@ -98,7 +98,7 @@
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                         data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                        aria-expanded="false" aria-label="Toggle navigation" style="background-color:#096B68; color:white;">
                         <span class="navbar-toggler-icon"></span>
                     </button>
                 </div>
