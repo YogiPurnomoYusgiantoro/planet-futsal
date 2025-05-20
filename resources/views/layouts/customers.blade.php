@@ -91,7 +91,7 @@
         <nav class="navbar navbar-custom">
             <div class="container-fluid d-flex justify-content-between align-items-center">
             <a class="navbar-brand d-flex align-items-center" href="/">
-    <img src="https://i.ibb.co/Z64dcSSW/logo-new-PF-2012.png" alt="" style="width: 40px; height: 40px; margin-right: 8px;">
+    <img src="{{ asset('images/logo.png') }}" alt="" style="width: 40px; height: 40px; margin-right: 8px;">
     <span style="font-weight: bold; font-size: 18px;">Planet Futsal</span>
 </a>
                 <div class="d-flex gap-2 align-items-center">
@@ -118,7 +118,7 @@
 
         <div id="splash-screen">
   <div class="splash-content">
-    <img src="https://i.ibb.co/Z64dcSSW/logo-new-PF-2012.png" alt="Planet Futsal Logo" />
+    <img src="{{ asset('images/logo.png') }}" alt="Planet Futsal Logo" />
   </div>
 </div>
 
