@@ -97,7 +97,7 @@
     <div class="app-container">
         <nav class="sidebar">
             <div class="px-3">
-                <h5 class="mb-3">Planet Futsal</h5>
+                <h5 class="mb-3">Admin Planet Futsal</h5>
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a href="#" class="nav-link {{ request()->is('lapangan*') ? '' : '' }}">Lapangan</a>

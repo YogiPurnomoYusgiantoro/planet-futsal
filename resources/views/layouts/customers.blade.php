@@ -13,7 +13,7 @@
         html, body {
             height: 100%;
             margin: 0;
-            background-color: #f8f9fa;
+            
         }
 
         body {
@@ -29,7 +29,7 @@
             border: 1px solid #ccc;
             display: flex;
             flex-direction: column;
-            background-color: white;
+            background-color: #FCFCFC !important;
             overflow: hidden;
         }
 
@@ -46,22 +46,41 @@
         }
 
         .navbar-custom {
-            background-color: #3F7D58;
+            background-color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .navbar-custom .navbar-brand,
         .navbar-custom .nav-link,
         .navbar-custom .navbar-toggler {
-            color: #ffffff;
+            color: #096B68;
         }
 
         .navbar-custom .nav-link:hover {
-            color: #dfffe3;
+            color: #096B68;
         }
 
         .navbar-custom .navbar-toggler-icon {
             filter: brightness(0) invert(1); 
         }
+
+        #splash-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+
+  .splash-content img {
+    width: 80px;
+    height: 80px;
+  }
     </style>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
@@ -71,8 +90,10 @@
     <div class="app-wrapper">
         <nav class="navbar navbar-custom">
             <div class="container-fluid d-flex justify-content-between align-items-center">
-                <a class="navbar-brand" href="/">Planet Futsal</a>
-
+            <a class="navbar-brand d-flex align-items-center" href="/">
+    <img src="https://i.ibb.co/Z64dcSSW/logo-new-PF-2012.png" alt="" style="width: 40px; height: 40px; margin-right: 8px;">
+    <span style="font-weight: bold; font-size: 18px;">Planet Futsal</span>
+</a>
                 <div class="d-flex gap-2 align-items-center">
 
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -95,11 +116,36 @@
             </div>
         </nav>
 
+        <div id="splash-screen">
+  <div class="splash-content">
+    <img src="https://i.ibb.co/Z64dcSSW/logo-new-PF-2012.png" alt="Planet Futsal Logo" />
+  </div>
+</div>
+
         <div class="content-scroll">
             @yield('content')
         </div>
     </div>
 
     @stack('scripts')
+
+    <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (!localStorage.getItem("splashShown")) {
+      setTimeout(function () {
+        var splash = document.getElementById("splash-screen");
+        if (splash) {
+          splash.style.display = "none";
+        }
+        localStorage.setItem("splashShown", "true");
+      }, 2000); 
+    } else {
+      var splash = document.getElementById("splash-screen");
+      if (splash) {
+        splash.style.display = "none";
+      }
+    }
+  });
+</script>
 </body>
 </html>
